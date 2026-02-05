@@ -1,0 +1,87 @@
+# 🧮 Calculatrice Distribuée : Java RMI & Docker
+
+Projet d'interopérabilité des systèmes réalisé dans le cadre de la Licence 3 Informatique. Cette application démontre la mise en œuvre d'un système distribué où la logique métier et l'interface utilisateur sont isolées dans des conteneurs distincts.
+
+**Équipe de développement :**
+* **Fahasoavana**
+* **Volasoa**
+
+---
+
+## 🚀 Présentation du Projet
+
+L'objectif est de fournir un service de calcul distant utilisant le protocole **Java RMI** (Remote Method Invocation) au sein d'une architecture conteneurisée avec **Docker**.
+
+### Points clés :
+* **Communication Distante :** Appel de méthodes via un registre RMI sur le port 1099.
+* **Analyse Syntaxique :** Support des expressions mathématiques complexes (ex: `15 + 10 * 3`) grâce à l'outil `StringTokenizer`.
+* **Conteneurisation :** Isolation complète du client et du serveur dans un réseau bridge Docker.
+* **UI Avancée :** Interface en ligne de commande avec gestion des couleurs ANSI pour une meilleure lisibilité.
+
+---
+
+## 🏗️ Architecture Technique
+
+
+
+Le projet est articulé autour de deux services principaux :
+1.  **srv-calcul (Serveur) :** Héberge l'implémentation de la calculatrice et expose l'objet distant.
+2.  **ctn-client (Client) :** Interface interactive qui parse les entrées utilisateur et communique avec le serveur.
+
+> [!IMPORTANT]
+> **Défi technique résolu :** Nous avons fixé le port d'exportation RMI sur le port 1099 pour permettre la communication à travers le tunnel Docker, contournant ainsi le problème des ports dynamiques par défaut de RMI.
+
+---
+
+## 📊 Flux de Données (Workflow)
+
+1.  **Saisie** : L'utilisateur entre une expression (ex: `78 + 1651`).
+2.  **Analyse** : Le `StringTokenizer` extrait les opérandes et l'opérateur au niveau du client.
+3.  **Appel Distant** : Le client sollicite le **Stub** via le réseau `rmi-net`.
+4.  **Sérialisation** : Les données sont converties en octets pour le transport vers le serveur.
+5.  **Calcul** : Le serveur exécute l'opération et renvoie le résultat après désérialisation.
+
+
+
+---
+
+## 🛠️ Stack Technique
+
+* **Langage :** Java 17+ (OpenJDK)
+* **Middleware :** Java RMI
+* **Infrastructure :** Docker / Docker Compose
+* **Analyse :** StringTokenizer (Java Standard Lib)
+
+---
+
+## 📂 Structure des Fichiers
+
+* `Calculatrice.java` : Interface distante (le contrat).
+* `CalculatriceImpl.java` : Implémentation de la logique de calcul (force le port 1099).
+* `ServeurRMI.java` : Initialisation du registre et publication du service.
+* `ClientRMI.java` : Point d'entrée utilisateur et analyseur syntaxique.
+* `Dockerfile` : Recette de construction de l'image (base OpenJDK-slim).
+* `docker-compose.yml` : Orchestration des conteneurs, du réseau `rmi-net` et des dépendances.
+
+---
+
+## 💻 Installation et Lancement
+
+### Prérequis
+* Docker installé.
+* Docker Compose.
+
+### Déploiement rapide
+Clonez le dépôt et lancez l'orchestration :
+
+```bash
+git clone fasoavana/Calculatrice-java-RMI.git
+cd Calculatrice-java-RMI
+docker compose up -d --build
+
+Accéder au Client
+
+Une fois les conteneurs lancés, connectez-vous au client interactif pour commencer à calculer :
+Bash
+
+docker exec -it ctn-client java ClientRMI

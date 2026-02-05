@@ -1,0 +1,27 @@
+services:
+  srv-calcul:
+    build: 
+      context: ./SERVEUR
+      dockerfile: ../Dockerfile
+    container_name: ctn-serveur
+    tty: true
+    stdin_open: true
+    command: java ServeurRMI
+    networks:
+      - rmi-net
+
+  cli-calcul:
+    build:
+      context: ./CLIENT
+      dockerfile: ../Dockerfile
+    container_name: ctn-client
+    depends_on:
+      - srv-calcul
+    networks:
+      - rmi-net
+    tty: true
+    stdin_open: true
+
+networks:
+  rmi-net:
+    driver: bridge
