@@ -1,10 +1,6 @@
 pipeline {
     agent any
-    triggers {
-        // Vérifie GitHub toutes les 5 minutes pour lancer le build automatiquement
-        pollSCM('H/5 * * * *')
-    }
-
+    
     environment {
         DOCKER_USER = 'faso01'
         SRV_IMAGE = 'projet2-srv-calcul'
